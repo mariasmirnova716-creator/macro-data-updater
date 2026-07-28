@@ -1,0 +1,6 @@
+source_url=https://www.cbr.ru/Queries/UniDbQuery/DownloadExcel/132934?Posted=True&From=01.01.2020&To=28.07.2026&FromDate=01%2F01%2F2020&ToDate=07%2F28%2F2026&backUrl=%2Fhd_base%2Finfl%2F%3FUniDbQuery.Posted%3DTrue%26UniDbQuery.From%3D01.01.2020%26UniDbQuery.To%3D28.07.2026
+period_from=2020-01-01
+period_to=2026-07-28
+updated_at=2026-07-28T18:29:48.140187
+rows=78
+last_date=2026-06-30

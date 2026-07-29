@@ -32,6 +32,12 @@ jobs:
 
       - name: Update CBR inflation
         run: python scripts/update_cbr_inflation.py
+        
+      - name: Update Eurozone inflation
+        run: python scripts/update_euro_inflation.py
+
+      - name: Update Russian quarterly CPI
+        run: python scripts/update_russia_cpi_quarterly.py
 
       - name: Save updated CSV files
         run: |

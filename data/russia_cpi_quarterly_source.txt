@@ -1,5 +1,5 @@
 source_url=https://rosstat.gov.ru/storage/mediabank/ipc_kv2_2005-2026.xlsx
 sheet=01
-updated_at=2026-07-29T11:57:02.524762
+updated_at=2026-07-29T11:57:53.226644
 rows=30
 last_date=2026-06-30

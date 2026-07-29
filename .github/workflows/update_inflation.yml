@@ -43,6 +43,13 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git add data/
-          git diff --cached --quiet || git commit -m "Update inflation data"
-          git push
+
+          if git diff --cached --quiet; then
+            echo "No data changes to save."
+          else
+            git commit -m "Update inflation data"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi

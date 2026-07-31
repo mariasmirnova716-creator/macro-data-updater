@@ -3,6 +3,9 @@ name: Update inflation data
 on:
   workflow_dispatch:
 
+  schedule:
+    - cron: "17 6 * * 1"
+
 permissions:
   contents: write
 
@@ -38,6 +41,12 @@ jobs:
 
       - name: Update Russian quarterly CPI
         run: python scripts/update_russia_cpi_quarterly.py
+      
+      - name: Update Russian GDP
+        run: python scripts/sheet_01_gdp_py/update_russia_gdp.py
+
+      - name: Update World Bank GDP per capita
+        run: python scripts/sheet_01_gdp_py/update_world_bank_gdp_per_capita.py
         
       - name: Validate inflation datasets
         run: python scripts/validate_inflation_outputs.py

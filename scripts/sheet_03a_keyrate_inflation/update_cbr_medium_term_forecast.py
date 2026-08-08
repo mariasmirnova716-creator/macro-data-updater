@@ -2156,6 +2156,13 @@ def main() -> None:
             excel_bytes
         )
     )
+    comment_date = comment_date_from_url(
+        comment_url
+    )
+
+    parameters["comment_date"] = (
+        comment_date.strftime("%Y-%m-%d")
+    )
 
     print()
     print(

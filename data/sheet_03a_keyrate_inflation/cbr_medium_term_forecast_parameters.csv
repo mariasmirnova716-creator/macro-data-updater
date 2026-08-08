@@ -1,6 +1,6 @@
-﻿year,inflation_dec_low,inflation_dec_high,inflation_dec_mid,inflation_avg_low,inflation_avg_high,inflation_avg_mid,key_rate_avg_low,key_rate_avg_high,key_rate_avg_mid
-2025,5.6,5.6,5.6,8.7,8.7,8.7,19.2,19.2,19.2
-2026,6.0,7.0,6.5,5.9,6.2,6.050000000000001,14.5,14.6,14.55
-2027,4.0,4.0,4.0,4.3,5.2,4.75,10.5,12.5,11.5
-2028,4.0,4.0,4.0,4.0,4.0,4.0,8.0,9.0,8.5
-2029,4.0,4.0,4.0,4.0,4.0,4.0,7.5,8.5,8.0
+﻿year,inflation_dec_low,inflation_dec_high,inflation_dec_mid,inflation_avg_low,inflation_avg_high,inflation_avg_mid,key_rate_avg_low,key_rate_avg_high,key_rate_avg_mid,comment_date
+2025,5.6,5.6,5.6,8.7,8.7,8.7,19.2,19.2,19.2,2026-08-05
+2026,6.0,7.0,6.5,5.9,6.2,6.050000000000001,14.5,14.6,14.55,2026-08-05
+2027,4.0,4.0,4.0,4.3,5.2,4.75,10.5,12.5,11.5,2026-08-05
+2028,4.0,4.0,4.0,4.0,4.0,4.0,8.0,9.0,8.5,2026-08-05
+2029,4.0,4.0,4.0,4.0,4.0,4.0,7.5,8.5,8.0,2026-08-05

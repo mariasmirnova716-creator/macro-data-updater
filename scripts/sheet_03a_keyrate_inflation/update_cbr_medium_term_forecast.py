@@ -388,6 +388,32 @@ def parse_forecast_range(
         high=number,
     )
 
+def normalize_key_rate_range(
+    value: ForecastRange | None,
+) -> ForecastRange | None:
+
+    if value is None:
+        return None
+
+    def normalize_number(number: float) -> float:
+        """
+        CBR medium-term key-rate forecast values
+        are published with one decimal place.
+
+        This also protects against Excel footnotes
+        being read as part of the number, e.g.
+        14.6¹ -> 14.61.
+        """
+        return round(number, 1)
+
+    low = normalize_number(value.low)
+    high = normalize_number(value.high)
+
+    return ForecastRange(
+        low=low,
+        high=high,
+    )
+
 
 def find_table_1(
     excel_bytes: bytes,
@@ -574,11 +600,35 @@ def parse_forecast_parameters(
             ]
         )
 
-        key_rate_avg = parse_forecast_range(
+        raw_key_rate_avg = parse_forecast_range(
             frame.iat[
                 key_rate_avg_row,
                 column_index,
             ]
+        )
+
+        if raw_key_rate_avg is not None:
+            if (
+                    abs(
+                        raw_key_rate_avg.low
+                        - round(raw_key_rate_avg.low, 1)
+                    ) > 1e-9
+                    or
+                    abs(
+                        raw_key_rate_avg.high
+                        - round(raw_key_rate_avg.high, 1)
+                    ) > 1e-9
+            ):
+                print(
+                    f"WARNING: suspicious key-rate precision "
+                    f"for {year}: "
+                    f"{raw_key_rate_avg.low}-"
+                    f"{raw_key_rate_avg.high}. "
+                    "Possible Excel footnote detected."
+                )
+
+        key_rate_avg = normalize_key_rate_range(
+            raw_key_rate_avg
         )
 
         record: dict[str, object] = {

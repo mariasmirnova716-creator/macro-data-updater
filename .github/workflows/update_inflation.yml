@@ -48,7 +48,7 @@ jobs:
       - name: Update World Bank GDP per capita
         run: python scripts/sheet_01_gdp_py/update_world_bank_gdp_per_capita.py
 
-       - name: Update Russian industrial production
+      - name: Update Russian industrial production
         run: python scripts/sheet_2_ipp_py/update_russia_ipp.py
         
       - name: Validate inflation datasets

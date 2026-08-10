@@ -1,5 +1,5 @@
 Russia industrial production — Sheet 2
-updated_utc=2026-08-10T17:03:45.022340+00:00
+updated_utc=2026-08-10T18:06:58.071061+00:00
 rosstat_page=https://rosstat.gov.ru/enterprise_industrial
 current_seasonal_xlsx=https://rosstat.gov.ru/storage/mediabank/sezon_2023_06-2026.xlsx
 current_ind_sub_xlsx=https://rosstat.gov.ru/storage/mediabank/ind_sub_2023-06-2026.xlsx

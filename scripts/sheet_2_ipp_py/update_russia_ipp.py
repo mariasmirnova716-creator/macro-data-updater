@@ -838,16 +838,16 @@ def parse_quarterly_sheet(
 
 def parse_quarterly(source) -> pd.DataFrame:
 
-    yoy = parse_quarterly_sheet(
-        source,
-        sheet_name="1",
-        value_name="ipp_qoy",
-    )
-
     qoq = parse_quarterly_sheet(
         source,
-        sheet_name="2",
+        sheet_name="1",
         value_name="ipp_qoq",
+    )
+
+    yoy = parse_quarterly_sheet(
+        source,
+        sheet_name="2",
+        value_name="ipp_qoy",
     )
 
     result = yoy.merge(
@@ -865,7 +865,6 @@ def parse_quarterly(source) -> pd.DataFrame:
         .sort_values(["year", "quarter"])
         .reset_index(drop=True)
     )
-
 
 # ============================================================
 # NEWEST-WINS MERGE

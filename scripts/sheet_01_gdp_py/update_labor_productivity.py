@@ -32,6 +32,10 @@ OPERATIONAL_OUTPUT = (
     DATA_DIR / "russia_labor_productivity_operational.csv"
 )
 
+COMBINED_OUTPUT = (
+    DATA_DIR / "russia_labor_productivity.csv"
+)
+
 SOURCE_INFO_FILE = (
     DATA_DIR / "russia_labor_productivity_source.txt"
 )
@@ -1357,6 +1361,48 @@ def main():
         operational_columns
     ].to_csv(
         OPERATIONAL_OUTPUT,
+        index=False,
+        encoding="utf-8",
+    )
+    # ========================================================
+    # COMBINED CSV FOR EXCEL / POWER QUERY
+    # ========================================================
+
+    annual_combined = annual.rename(
+        columns={
+            "labor_productivity_index": "value"
+        }
+    ).copy()
+
+    annual_combined["series"] = "annual"
+    annual_combined["period"] = "year"
+
+    annual_combined = annual_combined[
+        ["series", "year", "period", "value"]
+    ]
+
+    operational_combined = operational.rename(
+        columns={
+            "labor_productivity_operational": "value"
+        }
+    ).copy()
+
+    operational_combined["series"] = "operational"
+
+    operational_combined = operational_combined[
+        ["series", "year", "period", "value"]
+    ]
+
+    combined = pd.concat(
+        [
+            annual_combined,
+            operational_combined,
+        ],
+        ignore_index=True,
+    )
+
+    combined.to_csv(
+        COMBINED_OUTPUT,
         index=False,
         encoding="utf-8",
     )

@@ -410,19 +410,27 @@ def detect_year(
     value,
 ) -> int | None:
 
+    if value is None:
+        return None
+
     text = clean_text(
         value
     )
 
     match = re.search(
-        r"\b(20\d{2})\b",
+        r"(20\d{2})",
         text,
     )
 
-    if match:
-        return int(
-            match.group(1)
-        )
+    if match is None:
+        return None
+
+    year = int(
+        match.group(1)
+    )
+
+    if 2010 <= year <= 2035:
+        return year
 
     return None
 
@@ -437,7 +445,10 @@ def parse_real_disposable_income(
         read_only=False,
     )
 
-    # Prefer explicit Rosstat sheet name.
+    # ========================================================
+    # 1. Find income worksheet
+    # ========================================================
+
     target_ws = None
 
     for ws in wb.worksheets:
@@ -451,7 +462,6 @@ def parse_real_disposable_income(
             and
             "рдд" in sheet_name
         ):
-
             target_ws = ws
             break
 
@@ -486,6 +496,8 @@ def parse_real_disposable_income(
             )
 
             if (
+                "реальные денежные доходы" in text
+                and
                 "реальные располагаемые" in text
                 and
                 "соответствующему периоду" in text
@@ -498,7 +510,7 @@ def parse_real_disposable_income(
 
         raise RuntimeError(
             "Could not identify Rosstat "
-            "real disposable income sheet."
+            "real income / disposable income sheet."
         )
 
     ws = target_ws
@@ -509,12 +521,12 @@ def parse_real_disposable_income(
     )
 
     # ========================================================
-    # Find YoY column for real disposable income
+    # 2. Find the TWO YoY columns
     # ========================================================
 
-    target_col = None
+    real_income_col = None
+    disposable_income_col = None
 
-    # Usually header is within first ~10 rows.
     for col in range(
         1,
         ws.max_column + 1,
@@ -533,7 +545,6 @@ def parse_real_disposable_income(
             ).value
 
             if value is not None:
-
                 parts.append(
                     clean_text(value)
                 )
@@ -542,30 +553,85 @@ def parse_real_disposable_income(
             parts
         )
 
+        # We need only:
+        # "к соответствующему периоду прошлого года"
         if (
-            "соответствующему" in header
-            and
-            "периоду" in header
+            "соответствующему" not in header
+            or
+            "периоду" not in header
+        ):
+            continue
+
+        # Determine which upper block this column belongs to.
+        #
+        # We inspect this column and nearby columns because
+        # Rosstat uses merged cells for group headers.
+        nearby_parts = []
+
+        for nearby_col in range(
+            max(1, col - 1),
+            min(ws.max_column, col + 1) + 1,
         ):
 
-            # We want the disposable-income section,
-            # which is the right-hand block.
-            target_col = col
+            for row in range(
+                1,
+                min(ws.max_row, 10) + 1,
+            ):
 
-    if target_col is None:
+                value = ws.cell(
+                    row,
+                    nearby_col,
+                ).value
 
-        raise RuntimeError(
-            "Could not find real disposable "
-            "income YoY column."
+                if value is not None:
+                    nearby_parts.append(
+                        clean_text(value)
+                    )
+
+        nearby_header = " ".join(
+            nearby_parts
         )
+
+        if (
+            "реальные располагаемые денежные доходы"
+            in nearby_header
+        ):
+            disposable_income_col = col
+
+        elif (
+            "реальные денежные доходы"
+            in nearby_header
+        ):
+            real_income_col = col
+
+    # --------------------------------------------------------
+    # Fallback for the known Rosstat structure.
+    #
+    # The workbook currently has:
+    # B = real income YoY
+    # C = real income previous period
+    # D = disposable income YoY
+    # E = disposable income previous period
+    # --------------------------------------------------------
+
+    if real_income_col is None:
+        real_income_col = 2
+
+    if disposable_income_col is None:
+        disposable_income_col = 4
+
+    print(
+        "Real-income YoY column:",
+        real_income_col,
+    )
 
     print(
         "Disposable-income YoY column:",
-        target_col,
+        disposable_income_col,
     )
 
     # ========================================================
-    # Parse years + periods
+    # 3. Parse years and periods
     # ========================================================
 
     rows = []
@@ -577,9 +643,9 @@ def parse_real_disposable_income(
         ws.max_row + 1,
     ):
 
-        # Search the whole row for year header.
         detected_year = None
 
+        # Search entire row for year header.
         for col in range(
             1,
             ws.max_column + 1,
@@ -596,7 +662,6 @@ def parse_real_disposable_income(
                 detected_year = year
                 break
 
-        # A year header must not itself be a quarter row.
         period = detect_period(
             ws.cell(
                 row,
@@ -604,12 +669,12 @@ def parse_real_disposable_income(
             ).value
         )
 
+        # Year headers are separate rows like "2014 год".
         if (
             detected_year is not None
             and
             period is None
         ):
-
             current_year = detected_year
 
         if current_year is None:
@@ -625,21 +690,34 @@ def parse_real_disposable_income(
         if period is None:
             continue
 
-        value = as_number(
+        real_income_value = as_number(
             ws.cell(
                 row,
-                target_col,
+                real_income_col,
             ).value
         )
 
-        if value is None:
+        disposable_income_value = as_number(
+            ws.cell(
+                row,
+                disposable_income_col,
+            ).value
+        )
+
+        # We keep the row if at least one indicator exists.
+        if (
+            real_income_value is None
+            and
+            disposable_income_value is None
+        ):
             continue
 
         rows.append(
             {
                 "year": current_year,
                 "period": period,
-                "real_disposable_income_yoy": value,
+                "real_income_yoy": real_income_value,
+                "real_disposable_income_yoy": disposable_income_value,
                 "source": "rosstat_current",
             }
         )
@@ -651,16 +729,33 @@ def parse_real_disposable_income(
     if df.empty:
 
         raise RuntimeError(
-            "No real disposable income "
-            "observations were extracted."
+            "No real-income observations "
+            "were extracted from Rosstat."
         )
+
+    # ========================================================
+    # 4. Proper chronological sorting
+    # ========================================================
+
+    period_order = {
+        "q1": 1,
+        "q2": 2,
+        "q3": 3,
+        "q4": 4,
+        "year": 5,
+    }
+
+    df["_period_order"] = (
+        df["period"]
+        .map(period_order)
+    )
 
     df = (
         df
         .sort_values(
             [
                 "year",
-                "period",
+                "_period_order",
             ]
         )
         .drop_duplicates(
@@ -670,10 +765,22 @@ def parse_real_disposable_income(
             ],
             keep="last",
         )
+        .drop(
+            columns="_period_order"
+        )
         .reset_index(
             drop=True
         )
     )
+
+    df[
+        "real_income_yoy"
+    ] = pd.to_numeric(
+        df[
+            "real_income_yoy"
+        ],
+        errors="coerce",
+    ).round(1)
 
     df[
         "real_disposable_income_yoy"
@@ -696,7 +803,6 @@ def merge_existing_history(
 ) -> pd.DataFrame:
 
     if not OUTPUT_FILE.exists():
-
         return current
 
     print(
@@ -718,42 +824,64 @@ def merge_existing_history(
     ):
 
         raise RuntimeError(
-            "Existing real disposable income CSV "
+            "Existing income CSV "
             "has unexpected columns."
         )
 
-    if "source" not in existing.columns:
+    # Old CSV may not yet contain real_income_yoy.
+    if "real_income_yoy" not in existing.columns:
+        existing[
+            "real_income_yoy"
+        ] = pd.NA
 
+    if "source" not in existing.columns:
         existing[
             "source"
         ] = "existing_history"
 
-    existing_keys = set(
+    current_keys = set(
         zip(
-            existing["year"].astype(int),
-            existing["period"].astype(str),
+            current["year"].astype(int),
+            current["period"].astype(str),
         )
     )
 
-    current_new = current[
-        ~current.apply(
-            lambda row:
-            (
+    # Keep old observations ONLY for periods that
+    # disappeared from the latest Rosstat workbook.
+    history_only = existing[
+        ~existing.apply(
+            lambda row: (
                 int(row["year"]),
                 str(row["period"]),
-            )
-            in existing_keys,
+            ) in current_keys,
             axis=1,
         )
     ].copy()
 
+    history_only[
+        "source"
+    ] = "existing_history"
+
     result = pd.concat(
         [
-            existing,
-            current_new,
+            history_only,
+            current,
         ],
         ignore_index=True,
         sort=False,
+    )
+
+    period_order = {
+        "q1": 1,
+        "q2": 2,
+        "q3": 3,
+        "q4": 4,
+        "year": 5,
+    }
+
+    result["_period_order"] = (
+        result["period"]
+        .map(period_order)
     )
 
     return (
@@ -761,7 +889,7 @@ def merge_existing_history(
         .sort_values(
             [
                 "year",
-                "period",
+                "_period_order",
             ]
         )
         .drop_duplicates(
@@ -769,7 +897,10 @@ def merge_existing_history(
                 "year",
                 "period",
             ],
-            keep="first",
+            keep="last",
+        )
+        .drop(
+            columns="_period_order"
         )
         .reset_index(
             drop=True
@@ -787,7 +918,7 @@ def validate(
 
     if df.empty:
         raise RuntimeError(
-            "Disposable income output is empty."
+            "Income output is empty."
         )
 
     if df.duplicated(
@@ -801,32 +932,36 @@ def validate(
             "Duplicate year-period combinations."
         )
 
-    if df[
-        "real_disposable_income_yoy"
-    ].isna().any():
-
-        raise RuntimeError(
-            "Missing disposable income values."
-        )
-
-    bad = df[
-        ~df[
-            "real_disposable_income_yoy"
-        ].between(
-            50,
-            150,
-        )
+    required_columns = [
+        "real_income_yoy",
+        "real_disposable_income_yoy",
     ]
 
-    if not bad.empty:
+    for column in required_columns:
 
-        raise RuntimeError(
-            "Disposable-income values outside "
-            "expected range:\n"
-            + bad.to_string(
-                index=False
+        if column not in df.columns:
+            raise RuntimeError(
+                f"Missing output column: {column}"
             )
-        )
+
+        bad = df[
+            df[column].notna()
+            &
+            ~df[column].between(
+                50,
+                150,
+            )
+        ]
+
+        if not bad.empty:
+
+            raise RuntimeError(
+                f"Values outside expected range "
+                f"in {column}:\n"
+                + bad.to_string(
+                    index=False
+                )
+            )
 
     annual = df[
         df["period"] == "year"
@@ -835,7 +970,7 @@ def validate(
     if annual.empty:
 
         raise RuntimeError(
-            "No annual disposable-income values."
+            "No annual income observations."
         )
 
     years = sorted(
@@ -844,29 +979,27 @@ def validate(
         .unique()
     )
 
-    if years:
+    expected = set(
+        range(
+            min(years),
+            max(years) + 1,
+        )
+    )
 
-        expected = set(
-            range(
-                min(years),
-                max(years) + 1,
+    missing = sorted(
+        expected
+        - set(years)
+    )
+
+    if missing:
+
+        raise RuntimeError(
+            "Missing annual years: "
+            + ", ".join(
+                str(year)
+                for year in missing
             )
         )
-
-        missing = sorted(
-            expected
-            - set(years)
-        )
-
-        if missing:
-
-            raise RuntimeError(
-                "Missing annual years: "
-                + ", ".join(
-                    str(year)
-                    for year in missing
-                )
-            )
 
 
 # ============================================================

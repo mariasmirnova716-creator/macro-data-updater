@@ -1,0 +1,9 @@
+Russia annual real accrued wage
+source=Rosstat
+page=https://rosstat.gov.ru/labor_market_employment_salaries
+current_file=https://rosstat.gov.ru/storage/mediabank/tab5-zpl-2025.xlsx
+indicator=Реальная начисленная заработная плата, в % к соответствующему периоду предыдущего года
+territory=Российская Федерация
+frequency=annual
+unit=percent to previous year
+latest_year=2025

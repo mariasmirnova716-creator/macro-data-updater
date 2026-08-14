@@ -1,0 +1,8 @@
+Russia real money income
+source=Rosstat
+page=https://rosstat.gov.ru/folder/13397
+current_file=https://rosstat.gov.ru/storage/mediabank/urov_11subg_1kv2026.xlsx
+indicator=Real money income of population by constituent entities of the Russian Federation
+territory=Russian Federation
+unit=percent to corresponding period of previous year
+latest_year=2026

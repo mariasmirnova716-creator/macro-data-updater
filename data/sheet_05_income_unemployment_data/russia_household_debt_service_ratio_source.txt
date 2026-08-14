@@ -1,0 +1,9 @@
+Russia household debt service ratio
+source=Bank of Russia
+review_page=https://cbr.ru/finstab/review/
+statistics_file=https://cbr.ru/Collection/Collection/File/60979/4q_2025_1q_2026.zip
+workbook=4q_2025_1q_2026.xlsx
+latest_date=2026-01-01
+
+indicator=Коэффициент обслуживания долга по кредитам физических лиц
+unit=percent

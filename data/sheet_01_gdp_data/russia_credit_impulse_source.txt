@@ -1,0 +1,9 @@
+Russia credit impulse
+source=Bank of Russia
+calculation=CBR Research and Forecasting Department (DIP)
+bulletins_page=https://www.cbr.ru/ec_research/mb/
+current_workbook=https://www.cbr.ru/Collection/Collection/File/62164/bulletin_26-05.xlsx
+indicator=Credit impulse
+unit=percent of GDP
+components=nonfinancial corporations; financial corporations; unsecured household loans and auto loans; mortgage
+latest_date=2026-05-01

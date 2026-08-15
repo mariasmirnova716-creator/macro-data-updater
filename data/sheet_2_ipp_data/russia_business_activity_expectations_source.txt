@@ -1,0 +1,15 @@
+Russia business activity and expectations
+source=Bank of Russia
+api=https://cbr.ru/dataservice/data
+publication_id=25
+dataset_id=58
+measure_id=119
+current_activity_element_id=44
+expected_activity_element_id=45
+
+current_activity=How did production volume, contracted work, turnover and services change?
+expected_activity_3m=How will production volume, contracted work, turnover and services change in the next three months?
+expectations_gap=expected_activity_3m-current_activity
+unit=balance of responses, points
+adjustment=seasonally adjusted CBR data
+latest_date=2026-08-01

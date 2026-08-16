@@ -17,7 +17,7 @@ import pandas as pd
 # ============================================================
 
 BASE_URL = "https://rosstat.gov.ru/storage/mediabank"
-FIRST_YEAR = 2020
+FIRST_YEAR = 2019
 
 PROJECT_DIR = Path(__file__).resolve().parents[2]
 DATA_DIR = PROJECT_DIR / "data" / "sheet_01_gdp_data"
@@ -1001,6 +1001,12 @@ def validate_result(
     if result.empty:
         raise RuntimeError(
             "Nominal GDP result is empty."
+        )
+    
+    if int(result["year"].min()) > FIRST_YEAR:
+        raise RuntimeError(
+            "Nominal GDP history does not contain "
+            f"the required base year {FIRST_YEAR}."
         )
 
     values = pd.to_numeric(

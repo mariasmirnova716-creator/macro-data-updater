@@ -510,6 +510,23 @@ def find_qoq_ex_fx_sheet(wb):
         "Sheet QOQ_ИВП was not found."
     )
 
+def find_yoy_ex_fx_sheet(wb):
+
+    for ws in wb.worksheets:
+
+        title = normalize_text(
+            ws.title
+        )
+
+        if (
+            "yoy" in title
+            and "ивп" in title
+        ):
+            return ws
+
+    raise RuntimeError(
+        "Sheet YOY_ИВП was not found."
+    )
 
 # ============================================================
 # CALCULATE EX-FX CHANGE
@@ -657,6 +674,25 @@ def validate(
             "%Y-%m-%d"
         ),
     )
+    missing_yoy_rates = df[
+        df["date"] >= pd.Timestamp("2021-01-01")
+        ][
+        "yoy_growth_ex_fx_pct"
+    ].isna()
+
+    if missing_yoy_rates.any():
+        bad_rows = df[
+            df["date"] >= pd.Timestamp("2021-01-01")
+            ][
+            missing_yoy_rates
+        ]
+
+        raise RuntimeError(
+            "Missing YOY_ИВП values:\n"
+            + bad_rows.to_string(
+                index=False
+            )
+        )
 
 
 # ============================================================
@@ -710,6 +746,28 @@ def main():
         "qoq_growth_ex_fx_pct",
     )
 
+    # --------------------------------------------------------
+    # 3. YoY growth excluding FX revaluation
+    # --------------------------------------------------------
+
+    yoy_ws = find_yoy_ex_fx_sheet(
+        wb
+    )
+
+    yoy = read_series(
+        yoy_ws,
+        "yoy_growth_ex_fx_pct",
+    )
+
+    print(
+        "\nRaw YOY_ИВП range:"
+    )
+
+    print(
+        yoy["date"].min().date(),
+        "->",
+        yoy["date"].max().date(),
+    )
     print(
         "\nRaw stock range:"
     )
@@ -737,6 +795,12 @@ def main():
     debt = calculate_ex_fx_change(
         stocks,
         qoq,
+    )
+
+    debt = debt.merge(
+        yoy,
+        on="date",
+        how="left",
     )
 
     # --------------------------------------------------------
@@ -871,6 +935,14 @@ def main():
         ]
         .round(6)
     )
+    debt[
+        "yoy_growth_ex_fx_pct"
+    ] = (
+        debt[
+            "yoy_growth_ex_fx_pct"
+        ]
+        .round(6)
+    )
 
     debt[
         "debt_change_ex_fx_mln_rub"
@@ -907,6 +979,7 @@ def main():
             "date",
             "total_debt_mln_rub",
             "qoq_growth_ex_fx_pct",
+            "yoy_growth_ex_fx_pct",
             "debt_change_ex_fx_mln_rub",
             "debt_change_ex_fx_trln_rub",
             "source",
@@ -939,6 +1012,11 @@ def main():
                 (
                     "qoq_series="
                     "QOQ_ИВП, quarterly growth excluding "
+                    "foreign-exchange revaluation"
+                ),
+                (
+                    "yoy_series="
+                    "YOY_ИВП, annual growth excluding "
                     "foreign-exchange revaluation"
                 ),
                 (

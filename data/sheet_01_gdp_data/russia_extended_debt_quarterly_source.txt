@@ -6,6 +6,7 @@ series=Долг организаций и домашних хозяйств, и�
 unit_stock=mln_rub
 unit_change=mln_rub
 qoq_series=QOQ_ИВП, quarterly growth excluding foreign-exchange revaluation
+yoy_series=YOY_ИВП, annual growth excluding foreign-exchange revaluation
 change_formula=previous actual debt stock * qoq_growth_ex_fx_pct / 100
 change_definition=quarterly debt change excluding foreign-exchange revaluation
 output_start=2020-01-01

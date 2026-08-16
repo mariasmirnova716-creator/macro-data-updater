@@ -1,0 +1,10 @@
+Russia nominal quarterly GDP
+source=Rosstat
+source_url=https://rosstat.gov.ru/storage/mediabank/VVP_kvartal_s-1995-2026.xlsx
+sheet=2
+indicator=Валовой внутренний продукт в текущих ценах
+unit=bln_rub
+prices=current
+first_year=2020
+last_date=2026-03-31
+updated_at=2026-08-16T17:45:21.691836

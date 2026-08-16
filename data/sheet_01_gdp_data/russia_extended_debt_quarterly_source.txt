@@ -1,0 +1,12 @@
+Russia extended debt
+source=Bank of Russia
+source_page=https://www.cbr.ru/statistics/macro_itm/dkfs/
+source_file=https://www.cbr.ru/vfs/statistics/nfs_hd/debt_extended.xlsx
+series=Долг организаций и домашних хозяйств, итого
+unit_stock=mln_rub
+unit_change=mln_rub
+qoq_series=QOQ_ИВП, quarterly growth excluding foreign-exchange revaluation
+change_formula=previous actual debt stock * qoq_growth_ex_fx_pct / 100
+change_definition=quarterly debt change excluding foreign-exchange revaluation
+output_start=2020-01-01
+output_end=2026-04-01

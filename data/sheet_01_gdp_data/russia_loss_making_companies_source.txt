@@ -1,0 +1,12 @@
+Russia loss-making companies share
+source=EMISS / Fedstat
+indicator_id=57746
+indicator_url=https://www.fedstat.ru/indicator/57746
+indicator=Удельный вес убыточных организаций с 2017 г.
+unit=percent
+territory=Российская Федерация без учета новых субъектов (с 01.01.2023)
+activity=Всего по обследуемым видам экономической деятельности
+periodicity=cumulative from the beginning of year
+date_definition=date is assigned to the final month of each cumulative period; for example 2026-05-01 means January-May 2026
+first_year=2023
+latest_date=2026-05-01

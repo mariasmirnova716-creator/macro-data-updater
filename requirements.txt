@@ -4,3 +4,4 @@ certifi
 
 requests
 beautifulsoup4
+xlrd

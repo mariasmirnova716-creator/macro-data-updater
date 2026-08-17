@@ -957,15 +957,34 @@ def main():
         exist_ok=True,
     )
 
-    content, page_years = download_population_xls()
-
-    print("\nParsing Fedstat XLS...")
-
-    population = parse_population_xls(
-        content
+    page_years = []
+    population = pd.DataFrame(
+        columns=[
+            "year",
+            "average_population",
+            "source",
+        ]
     )
 
-    population["source"] = "fedstat_31556"
+    try:
+        content, page_years = download_population_xls()
+
+        print("\nParsing Fedstat XLS...")
+
+        population = parse_population_xls(
+            content
+        )
+
+        population["source"] = "fedstat_31556"
+
+    except requests.exceptions.HTTPError as exc:
+        print()
+        print("WARNING: Fedstat request failed.")
+        print(f"Fedstat error: {exc}")
+        print(
+            "Existing population history will be preserved. "
+            "Continuing with Rosstat."
+        )
 
     print("\nFinding latest Rosstat population workbook...")
 
@@ -1113,8 +1132,12 @@ def main():
                 f"indicator_url={INDICATOR_URL}",
                 f"latest_year={population['year'].max()}",
                 (
-                    "page_detected_latest_year="
-                    f"{max(page_years)}"
+                        "page_detected_latest_year="
+                        + (
+                            str(max(page_years))
+                            if page_years
+                            else "unavailable"
+                        )
                 ),
                 "",
                 (

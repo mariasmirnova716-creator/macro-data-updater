@@ -47,6 +47,9 @@ jobs:
       
       - name: Update Russian GDP
         run: python scripts/sheet_01_gdp_py/update_russia_gdp.py
+        
+      - name: Update Russian average population
+        run: python scripts/sheet_01_gdp_py/update_average_population.py
 
       - name: Update World Bank GDP per capita
         run: python scripts/sheet_01_gdp_py/update_world_bank_gdp_per_capita.py

@@ -2,14 +2,13 @@ from __future__ import annotations
 
 import io
 import re
-import ssl
 import urllib.parse
-import urllib.request
 from datetime import date
 from pathlib import Path
 
 import certifi
 import pandas as pd
+import requests
 
 
 PAGE_URL = "https://www.cbr.ru/hd_base/infl/"
@@ -23,10 +22,26 @@ DATA_DIR = PROJECT_DIR / "data"
 OUTPUT_FILE = DATA_DIR / "cbr_inflation_monthly.csv"
 SOURCE_INFO_FILE = DATA_DIR / "cbr_inflation_source.txt"
 
+HTTP_SESSION = requests.Session()
 
-def create_ssl_context() -> ssl.SSLContext:
-    """Создаёт SSL-контекст с сертификатами certifi."""
-    return ssl.create_default_context(cafile=certifi.where())
+HTTP_SESSION.headers.update(
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/126.0.0.0 Safari/537.36"
+        ),
+        "Accept": (
+            "text/html,application/xhtml+xml,"
+            "application/xml;q=0.9,image/avif,image/webp,"
+            "*/*;q=0.8"
+        ),
+        "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache",
+    }
+)
+
 
 
 def format_date_ru(value: date) -> str:
@@ -49,31 +64,21 @@ def build_page_url(start_date: date, end_date: date) -> str:
 
 def download_bytes(url: str) -> tuple[bytes, str]:
     """
-    Загружает содержимое URL.
-
-    Возвращает:
-    - байты ответа;
-    - итоговый URL после перенаправлений.
+    Загружает содержимое URL через одну общую HTTP-сессию.
+    Это позволяет сохранять cookies между открытием страницы ЦБ
+    и последующим скачиванием Excel.
     """
-    request = urllib.request.Request(
+
+    response = HTTP_SESSION.get(
         url,
-        headers={
-            "User-Agent": (
-                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                "AppleWebKit/537.36 Chrome/126 Safari/537.36"
-            ),
-            "Accept": "*/*",
-            "Accept-Language": "ru-RU,ru;q=0.9,en;q=0.8",
-        },
+        timeout=90,
+        allow_redirects=True,
+        verify=certifi.where(),
     )
 
-    with urllib.request.urlopen(
-        request,
-        timeout=90,
-        context=create_ssl_context(),
-    ) as response:
-        return response.read(), response.geturl()
+    response.raise_for_status()
 
+    return response.content, response.url
 
 def find_excel_url(page_html: str, page_url: str) -> str:
     """

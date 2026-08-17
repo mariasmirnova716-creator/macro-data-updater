@@ -1223,6 +1223,131 @@ def merge_existing_history(
 # MAIN
 # ============================================================
 
+def load_existing_history_for_fallback() -> pd.DataFrame:
+    """
+    Used only when Fedstat blocks GitHub Actions with HTTP 403.
+
+    The existing CSV is treated as preserved official history.
+    We validate it before allowing the script to finish
+    successfully.
+
+    No files are rewritten in fallback mode.
+    """
+
+    print(
+        "\nFedstat is unavailable from this environment."
+    )
+
+    print(
+        "Checking preserved CSV history..."
+    )
+
+    if not OUTPUT_FILE.exists():
+
+        raise RuntimeError(
+            "Fedstat returned HTTP 403 and no existing "
+            "loss-making companies CSV is available."
+        )
+
+    existing = pd.read_csv(
+        OUTPUT_FILE
+    )
+
+    required_columns = {
+        "date",
+        "loss_making_companies_share",
+    }
+
+    missing_columns = (
+        required_columns
+        - set(existing.columns)
+    )
+
+    if missing_columns:
+
+        raise RuntimeError(
+            "Existing loss-making companies CSV "
+            "has unexpected structure. Missing columns: "
+            + ", ".join(
+                sorted(missing_columns)
+            )
+        )
+
+    if existing.empty:
+
+        raise RuntimeError(
+            "Existing loss-making companies CSV is empty."
+        )
+
+    dates = pd.to_datetime(
+        existing["date"],
+        errors="coerce",
+    )
+
+    if dates.isna().any():
+
+        raise RuntimeError(
+            "Existing loss-making companies CSV "
+            "contains invalid dates."
+        )
+
+    if existing["date"].duplicated().any():
+
+        raise RuntimeError(
+            "Existing loss-making companies CSV "
+            "contains duplicate dates."
+        )
+
+    values = pd.to_numeric(
+        existing[
+            "loss_making_companies_share"
+        ],
+        errors="coerce",
+    )
+
+    if values.isna().any():
+
+        raise RuntimeError(
+            "Existing loss-making companies CSV "
+            "contains missing or non-numeric values."
+        )
+
+    bad_values = ~values.between(
+        0,
+        100,
+    )
+
+    if bad_values.any():
+
+        raise RuntimeError(
+            "Existing loss-making companies CSV "
+            "contains values outside 0-100%."
+        )
+
+    latest_date = dates.max()
+
+    print(
+        "Preserved history is valid."
+    )
+
+    print(
+        "Latest stored observation:",
+        latest_date.strftime(
+            "%Y-%m"
+        ),
+    )
+
+    print(
+        "No files will be changed."
+    )
+
+    print(
+        "The workflow may continue using "
+        "the last successfully downloaded Fedstat data."
+    )
+
+    return existing
+
 def main():
 
     DATA_DIR.mkdir(
@@ -1230,9 +1355,95 @@ def main():
         exist_ok=True,
     )
 
-    content, page_years = (
-        download_loss_making_xls()
-    )
+    # ========================================================
+    # DOWNLOAD CURRENT FEDSTAT DATA
+    #
+    # GitHub-hosted runners are sometimes blocked by Fedstat
+    # with HTTP 403, while the same request works locally.
+    #
+    # ONLY HTTP 403 gets a fallback.
+    # Any other error must still fail the workflow.
+    # ========================================================
+
+    try:
+
+        content, page_years = (
+            download_loss_making_xls()
+        )
+
+    except requests.exceptions.HTTPError as exc:
+
+        status_code = None
+
+        if exc.response is not None:
+
+            status_code = (
+                exc.response.status_code
+            )
+
+        if status_code != 403:
+
+            raise
+
+        print(
+            "\n" + "=" * 72
+        )
+
+        print(
+            "FEDSTAT HTTP 403"
+        )
+
+        print(
+            "=" * 72
+        )
+
+        print(
+            "\nFedstat blocked this request."
+        )
+
+        print(
+            "This is allowed only as a 403 fallback."
+        )
+
+        existing = (
+            load_existing_history_for_fallback()
+        )
+
+        print(
+            "\n" + "=" * 72
+        )
+
+        print(
+            "DONE WITH PRESERVED HISTORY"
+        )
+
+        print(
+            "=" * 72
+        )
+
+        print(
+            "\nOutput remains unchanged:"
+        )
+
+        print(
+            OUTPUT_FILE
+        )
+
+        print(
+            "\nRange:"
+        )
+
+        print(
+            existing["date"].min(),
+            "->",
+            existing["date"].max(),
+        )
+
+        return
+
+    # ========================================================
+    # NORMAL FEDSTAT UPDATE
+    # ========================================================
 
     print(
         "\nParsing Fedstat export..."
@@ -1251,9 +1462,26 @@ def main():
         "\nCurrent Fedstat data:"
     )
 
+    print(
+        current
+        .tail(15)
+        .to_string(
+            index=False
+        )
+    )
+
+    # ========================================================
+    # PRESERVE OLD HISTORY + ADD CURRENT DATA
+    # ========================================================
 
     result = merge_existing_history(
         current
+    )
+
+    # Validate merged output as well.
+    validate(
+        result,
+        page_years,
     )
 
     result.to_csv(

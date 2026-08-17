@@ -1,12 +1,12 @@
 comment_page=https://www.cbr.ru/dkp/mp_dec/decision_key_rate/comment_05082026/
 xlsx_url=https://www.cbr.ru/Content/Document/File/194307/commet_graph_05082026.xlsx
-updated_at=2026-08-09T00:34:57.456397
+updated_at=2026-08-17T16:57:55.457012
 actual_file=data/cbr_inflation_monthly.csv
 parameters_file=data/sheet_03a_keyrate_inflation/cbr_medium_term_forecast_parameters.csv
 monthly_file=data/sheet_03a_keyrate_inflation/cbr_keyrate_inflation_monthly_forecast.csv
-key_rate_forecast_from=2026-07-31
+key_rate_forecast_from=2026-08-31
 key_rate_forecast_to=2027-12-31
-inflation_forecast_from=2026-07-31
+inflation_forecast_from=2026-08-31
 inflation_forecast_to=2027-12-31
 method_key_rate_current_year=keep all actual months; calculate a linear remaining-month path so Jan-Dec average equals the midpoint of the CBR annual-average range
 method_key_rate_future_year=January equals previous December; calculate a linear Jan-Dec path whose annual average equals the midpoint of the CBR annual-average range

@@ -1,5 +1,5 @@
 source=https://api.bls.gov/publicAPI/v2/timeseries/data/
 series_id=CUUR0000SA0
-updated_at=2026-08-17T18:22:47.410020
+updated_at=2026-08-17T18:31:22.962924
 rows=78
 last_date=2026-07-31

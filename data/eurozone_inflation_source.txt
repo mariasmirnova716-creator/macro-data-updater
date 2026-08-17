@@ -1,6 +1,6 @@
 source=https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_manr?lang=en&freq=M&unit=RCH_A&coicop=CP00&geo=EA20&sinceTimePeriod=2020-01&untilTimePeriod=2026-08
 dataset=prc_hicp_manr
 geo=EA20
-updated_at=2026-08-10T18:06:42.400608
+updated_at=2026-08-17T13:05:08.715061
 rows=72
 last_date=2025-12-31

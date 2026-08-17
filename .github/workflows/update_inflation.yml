@@ -60,6 +60,9 @@ jobs:
       - name: Update Russian nominal quarterly GDP
         run: python scripts/sheet_01_gdp_py/update_gdp_nominal_quarterly.py
 
+      - name: Update Russian labor productivity
+        run: python scripts/sheet_01_gdp_py/update_labor_productivity.py
+
       - name: Update World Bank GDP per capita
         run: python scripts/sheet_01_gdp_py/update_world_bank_gdp_per_capita.py
 

@@ -35,6 +35,9 @@ jobs:
 
       - name: Update CBR inflation
         run: python scripts/update_cbr_inflation.py
+
+      - name: Update Sheet 3A key rate and inflation forecast
+        run: python scripts/sheet_03a_keyrate_inflation/update_cbr_medium_term_forecast.py
         
       - name: Update Eurozone inflation
         run: python scripts/update_euro_inflation.py

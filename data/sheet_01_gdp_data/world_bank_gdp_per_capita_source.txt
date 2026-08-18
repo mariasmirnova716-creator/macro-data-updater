@@ -2,7 +2,7 @@ constant_indicator=NY.GDP.PCAP.KD
 current_indicator=NY.GDP.PCAP.CD
 constant_url=https://api.worldbank.org/v2/country/RU/indicator/NY.GDP.PCAP.KD?format=json&per_page=1000&date=2011%3A2026
 current_url=https://api.worldbank.org/v2/country/RU/indicator/NY.GDP.PCAP.CD?format=json&per_page=1000&date=2011%3A2026
-updated_at=2026-08-18T08:48:24.714851
+updated_at=2026-08-18T08:59:05.109226
 rows=15
 latest_constant_year=2025
 latest_current_year=2025

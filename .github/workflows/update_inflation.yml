@@ -77,6 +77,9 @@ jobs:
 
       - name: Update Russian industrial production
         run: python scripts/sheet_2_ipp_py/update_russia_ipp.py
+
+      - name: Update Russian real income
+        run: python scripts/sheet_05_income_unemployment_py/update_real_income.py
         
       - name: Validate inflation datasets
         run: python scripts/validate_inflation_outputs.py

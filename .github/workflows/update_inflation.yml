@@ -86,6 +86,9 @@ jobs:
 
       - name: Update Russian household debt service ratio
         run: python scripts/sheet_05_income_unemployment_py/update_russia_household_debt_service_ratio.py
+
+      - name: Update Russian unemployment
+        run: python scripts/sheet_05_income_unemployment_py/update_unemployment.py
         
       - name: Validate inflation datasets
         run: python scripts/validate_inflation_outputs.py

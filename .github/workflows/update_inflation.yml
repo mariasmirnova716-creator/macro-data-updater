@@ -72,6 +72,9 @@ jobs:
       - name: Update Russian real disposable income
         run: python scripts/sheet_01_gdp_py/update_real_disposable_income.py
 
+      - name: Update Russian business activity expectations
+        run: python scripts/sheet_2_ipp_py/update_business_expectations.py
+
       - name: Update Russian industrial production
         run: python scripts/sheet_2_ipp_py/update_russia_ipp.py
         

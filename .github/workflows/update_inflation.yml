@@ -80,6 +80,9 @@ jobs:
 
       - name: Update Russian real income
         run: python scripts/sheet_05_income_unemployment_py/update_real_income.py
+
+      - name: Update Russian real wage
+        run: python scripts/sheet_05_income_unemployment_py/update_real_wage.py
         
       - name: Validate inflation datasets
         run: python scripts/validate_inflation_outputs.py

@@ -29,6 +29,12 @@ jobs:
 
       - name: Update Russian CPI
         run: python scripts/update_russia_cpi.py
+        
+      - name: Update Sheet 4 rates and oil
+        run: python scripts/sheet_04_rates_oil_py/update_sheet_04.py
+
+      - name: Update Sheet 6 export import and current account
+        run: python scripts/sheet_06_exp_imp_py/update_sheet_06.py
 
       - name: Update US inflation
         run: python scripts/update_us_inflation.py
@@ -89,12 +95,6 @@ jobs:
 
       - name: Update Russian unemployment
         run: python scripts/sheet_05_income_unemployment_py/update_unemployment.py
-
-      - name: Update Sheet 4 rates and oil
-        run: python scripts/sheet_04_rates_oil_py/update_sheet_04.py
-
-      - name: Update Sheet 6 export import and current account
-        run: python scripts/sheet_06_exp_imp_py/update_sheet_06.py
         
       - name: Validate inflation datasets
         run: python scripts/validate_inflation_outputs.py

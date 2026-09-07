@@ -30,5 +30,9 @@ year,period,ipp_yoy_period,source_period
 2022,h1,102.4,ind_sub_2018_12-2025
 2022,m9,101.5,ind_sub_2018_12-2025
 2022,q1_cumulative,106.3,ind_sub_2018_12-2025
-2026,h1,100.4,ind_sub_2023_current
-2026,q1_cumulative,100.3,ind_sub_2023_current
+2025,h1,101.1,ind_sub_2023_current
+2025,m9,100.8,ind_sub_2023_current
+2025,q1_cumulative,100.6,ind_sub_2023_current
+2025,year,101.1,ind_sub_2023_current
+2026,h1,100.0,ind_sub_2023_current
+2026,q1_cumulative,99.9,ind_sub_2023_current

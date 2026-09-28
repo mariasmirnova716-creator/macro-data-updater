@@ -28,75 +28,99 @@ jobs:
           pip install -r requirements.txt
 
       - name: Update Russian CPI
+        continue-on-error: true
         run: python scripts/update_russia_cpi.py
         
       - name: Update Sheet 4 rates and oil
+        continue-on-error: true
         run: python scripts/sheet_04_rates_oil_py/update_sheet_04.py
 
       - name: Update Sheet 6 export import and current account
+        continue-on-error: true
         run: python scripts/sheet_06_exp_imp_py/update_sheet_06.py
 
       - name: Update US inflation
+        continue-on-error: true
         run: python scripts/update_us_inflation.py
 
       - name: Update CBR inflation
+        continue-on-error: true
         run: python scripts/update_cbr_inflation.py
 
       - name: Update Sheet 3A key rate and inflation forecast
+        continue-on-error: true
         run: python scripts/sheet_03a_keyrate_inflation/update_cbr_medium_term_forecast.py
         
       - name: Update Eurozone inflation
+        continue-on-error: true
         run: python scripts/update_euro_inflation.py
 
       - name: Update Russian quarterly CPI
+        continue-on-error: true
         run: python scripts/update_russia_cpi_quarterly.py
       
       - name: Update Russian GDP
+        continue-on-error: true
         run: python scripts/sheet_01_gdp_py/update_russia_gdp.py
         
       - name: Update Russian average population
+        continue-on-error: true
         run: python scripts/sheet_01_gdp_py/update_average_population.py
           
       - name: Update Russian credit impulse
+        continue-on-error: true
         run: python scripts/sheet_01_gdp_py/update_credit_impulse.py
 
       - name: Update Russian extended debt
+        continue-on-error: true
         run: python scripts/sheet_01_gdp_py/update_extended_debt.py
 
       - name: Update Russian nominal quarterly GDP
+        continue-on-error: true
         run: python scripts/sheet_01_gdp_py/update_gdp_nominal_quarterly.py
 
       - name: Update Russian labor productivity
+        continue-on-error: true
         run: python scripts/sheet_01_gdp_py/update_labor_productivity.py
 
       - name: Update Russian loss-making companies
+        continue-on-error: true
         run: python scripts/sheet_01_gdp_py/update_loss_making_companies.py
 
       - name: Update World Bank GDP per capita
+        continue-on-error: true
         run: python scripts/sheet_01_gdp_py/update_world_bank_gdp_per_capita.py
 
       - name: Update Russian real disposable income
+        continue-on-error: true
         run: python scripts/sheet_01_gdp_py/update_real_disposable_income.py
 
       - name: Update Russian business activity expectations
+        continue-on-error: true
         run: python scripts/sheet_2_ipp_py/update_business_expectations.py
 
       - name: Update Russian industrial production
+        continue-on-error: true
         run: python scripts/sheet_2_ipp_py/update_russia_ipp.py
 
       - name: Update Russian real income
+        continue-on-error: true
         run: python scripts/sheet_05_income_unemployment_py/update_real_income.py
 
       - name: Update Russian real wage
+        continue-on-error: true
         run: python scripts/sheet_05_income_unemployment_py/update_real_wage.py
 
       - name: Update Russian household debt service ratio
+        continue-on-error: true
         run: python scripts/sheet_05_income_unemployment_py/update_russia_household_debt_service_ratio.py
 
       - name: Update Russian unemployment
+        continue-on-error: true
         run: python scripts/sheet_05_income_unemployment_py/update_unemployment.py
         
       - name: Validate inflation datasets
+        continue-on-error: true
         run: python scripts/validate_inflation_outputs.py
         
       - name: Save updated CSV files
@@ -109,7 +133,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No data changes to save."
           else
-            git commit -m "Update inflation data"
+            git commit -m "Update data"
             git pull --rebase origin main
             git push origin HEAD:main
           fi

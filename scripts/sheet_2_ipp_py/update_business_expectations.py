@@ -195,12 +195,19 @@ def parse_business_activity(
             continue
 
         parsed_date = pd.to_datetime(
-            raw_date,
-            errors="coerce",
-        )
+    raw_date,
+    errors="coerce",
+)
 
-        if pd.isna(parsed_date):
-            continue
+if pd.isna(parsed_date):
+    continue
+
+# CBR API labels these monthly observations with the
+# first day of the following month.
+# Example:
+# 2026-10-01 in API = September 2026 in the CBR table.
+parsed_date = parsed_date - pd.DateOffset(months=1)
+
 
         numeric_value = pd.to_numeric(
             value,
@@ -347,33 +354,23 @@ def merge_existing_history(
             "has unexpected columns."
         )
 
-    existing[
-        "date"
-    ] = pd.to_datetime(
+    existing["date"] = pd.to_datetime(
         existing["date"],
         errors="coerce",
     ).dt.date
 
-    if "source" not in existing.columns:
-        existing[
-            "source"
-        ] = "existing_history"
+    # Current CBR download is authoritative for the whole
+    # period covered by the API.
+    # Preserve old history only if it predates the first
+    # observation returned by the current API download.
+    first_current_date = current["date"].min()
 
-    current_dates = set(
-        current["date"]
-    )
-
-    # Preserve observations that disappeared from
-    # the latest CBR response.
     history_only = existing[
-        ~existing["date"].isin(
-            current_dates
-        )
+        existing["date"] < first_current_date
     ].copy()
 
-    history_only[
-        "source"
-    ] = "existing_history"
+    if not history_only.empty:
+        history_only["source"] = "existing_history"
 
     result = pd.concat(
         [
@@ -386,16 +383,12 @@ def merge_existing_history(
 
     return (
         result
-        .sort_values(
-            "date"
-        )
+        .sort_values("date")
         .drop_duplicates(
             "date",
             keep="last",
         )
-        .reset_index(
-            drop=True
-        )
+        .reset_index(drop=True)
     )
 
 

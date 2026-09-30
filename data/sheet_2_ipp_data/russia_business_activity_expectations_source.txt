@@ -12,4 +12,4 @@ expected_activity_3m=How will production volume, contracted work, turnover and s
 expectations_gap=expected_activity_3m-current_activity
 unit=balance of responses, points
 adjustment=seasonally adjusted CBR data
-latest_date=2026-10-01
+latest_date=2026-09-01

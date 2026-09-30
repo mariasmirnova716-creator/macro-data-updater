@@ -1,3 +1,3 @@
 source_url=https://rosstat.gov.ru/storage/mediabank/ipc_mes_08-2026.xlsx
-updated_at=2026-09-29T18:43:54.802086
+updated_at=2026-09-30T07:18:57.157967
 rows=80

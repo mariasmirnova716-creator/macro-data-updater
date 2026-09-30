@@ -195,19 +195,21 @@ def parse_business_activity(
             continue
 
         parsed_date = pd.to_datetime(
-    raw_date,
-    errors="coerce",
-)
+            raw_date,
+            errors="coerce",
+        )
 
-if pd.isna(parsed_date):
-    continue
+        if pd.isna(parsed_date):
+            continue
 
-# CBR API labels these monthly observations with the
-# first day of the following month.
-# Example:
-# 2026-10-01 in API = September 2026 in the CBR table.
-parsed_date = parsed_date - pd.DateOffset(months=1)
-
+        # CBR API dates monthly observations by the
+        # first day of the following month.
+        # Shift back one month to match the reporting
+        # month displayed in the CBR web table.
+        parsed_date = (
+            parsed_date
+            - pd.DateOffset(months=1)
+        )
 
         numeric_value = pd.to_numeric(
             value,
@@ -223,7 +225,6 @@ parsed_date = parsed_date - pd.DateOffset(months=1)
                 "value": numeric_value,
             }
         )
-
     df = pd.DataFrame(
         rows
     )

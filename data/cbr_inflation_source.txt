@@ -1,6 +1,6 @@
-source_url=https://www.cbr.ru/Queries/UniDbQuery/DownloadExcel/132934?Posted=True&From=01.01.2020&To=30.09.2026&FromDate=01%2F01%2F2020&ToDate=09%2F30%2F2026&backUrl=%2Fhd_base%2Finfl%2F%3FUniDbQuery.Posted%3DTrue%26UniDbQuery.From%3D01.01.2020%26UniDbQuery.To%3D30.09.2026
+source_url=https://www.cbr.ru/Queries/UniDbQuery/DownloadExcel/132934?Posted=True&From=01.01.2020&To=05.10.2026&FromDate=01%2F01%2F2020&ToDate=10%2F05%2F2026&backUrl=%2Fhd_base%2Finfl%2F%3FUniDbQuery.Posted%3DTrue%26UniDbQuery.From%3D01.01.2020%26UniDbQuery.To%3D05.10.2026
 period_from=2020-01-01
-period_to=2026-09-30
-updated_at=2026-09-30T07:19:04.325374
+period_to=2026-10-05
+updated_at=2026-10-05T14:47:53.392654
 rows=80
 last_date=2026-08-31

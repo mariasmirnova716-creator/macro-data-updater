@@ -1,5 +1,5 @@
 source_url=https://rosstat.gov.ru/storage/mediabank/VVP_kvartal_s-1995-2026.xlsx
 sheet=9
-updated_at=2026-10-19T13:25:36.838164
+updated_at=2026-10-26T13:11:15.061480
 rows=77
 last_date=2026-06-30

@@ -1,6 +1,6 @@
-comment_page=https://www.cbr.ru/dkp/mp_dec/decision_key_rate/comment_05082026/
-xlsx_url=https://www.cbr.ru/Content/Document/File/194307/commet_graph_05082026.xlsx
-updated_at=2026-11-02T16:04:23.073319
+comment_page=https://www.cbr.ru/dkp/mp_dec/decision_key_rate/comment_05112026/
+xlsx_url=https://www.cbr.ru/Content/Document/File/198946/commet_graph_05112026.xlsx
+updated_at=2026-11-09T16:29:44.974690
 actual_file=data/cbr_inflation_monthly.csv
 parameters_file=data/sheet_03a_keyrate_inflation/cbr_medium_term_forecast_parameters.csv
 monthly_file=data/sheet_03a_keyrate_inflation/cbr_keyrate_inflation_monthly_forecast.csv

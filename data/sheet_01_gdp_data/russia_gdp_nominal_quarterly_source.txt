@@ -7,4 +7,4 @@ unit=bln_rub
 prices=current
 first_year=2019
 last_date=2026-06-30
-updated_at=2026-10-26T13:11:43.959424
+updated_at=2026-11-16T15:55:39.531454

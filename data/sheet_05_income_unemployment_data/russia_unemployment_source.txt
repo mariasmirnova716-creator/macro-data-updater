@@ -1,7 +1,7 @@
 Russia unemployment rate
 source=Rosstat
 page=https://rosstat.gov.ru/labour_force
-current_file=https://rosstat.gov.ru/storage/mediabank/Trud-3_15-s.xlsx
+current_file=https://rosstat.gov.ru/storage/mediabank/trud_3_15-s.xlsx
 indicator=Численность безработных в возрасте 15 лет и старше и уровень безработицы
 territory=Российская Федерация
 frequency=calendar quarters only

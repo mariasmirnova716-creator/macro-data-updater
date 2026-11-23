@@ -1,6 +1,6 @@
 Russia real disposable money income
 rosstat_page=https://rosstat.gov.ru/folder/13397
-current_file=https://rosstat.gov.ru/storage/mediabank/urov_12kv_2kv2026.xlsx
+current_file=https://rosstat.gov.ru/storage/mediabank/urov_12kv_3kv2026.xlsx
 latest_year=2026
 
 indicator=real disposable money income
